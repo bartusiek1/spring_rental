@@ -23,7 +23,7 @@ public class Car {
 
     @Enumerated(EnumType.STRING)
     private TypNadwozia nadwozie;
-    private int iloscPasazerow;
+    private Integer iloscPasazerow;
 
     @Enumerated(EnumType.STRING)
     private TypSkrzyni skrzyniaBiegow;
