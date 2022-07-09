@@ -1,9 +1,12 @@
 package pl.sda.arp4.spring_rental.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import pl.sda.arp4.spring_rental.model.dto.CarDTO;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,23 +20,34 @@ import java.util.Set;
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-
-    private String nazwa;
-    private String marka;
-    private LocalDate dataProdukcji;
-
+    private Long id;
+    ///
+    private String name;
+    private String make;
+    private LocalDate productionDate;
     @Enumerated(EnumType.STRING)
-    private TypNadwozia nadwozie;
-    private Integer iloscPasazerow;
-
+    private CarBodyType bodyType;
+    private Integer seats;
     @Enumerated(EnumType.STRING)
-    private TypSkrzyni skrzyniaBiegow;
-    private Double pojemnoscSilnika;
-
+    private CarGearBox carGearBox;
+    private Double engineCapacity;
+    // carRentals a. zawiera wszystkie wynajmy w bazie?
+    //            b. zawiera tylko wynajmy powiązane z tym samochodem?
     @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
+    @JsonManagedReference
     private Set<CarRental> carRentals;
 
-
+    public CarDTO mapToCarDTO() {
+        return new CarDTO(
+                id,
+                name,
+                make,
+                productionDate,
+                bodyType,
+                seats,
+                carGearBox,
+                engineCapacity
+        );
+    }
 }

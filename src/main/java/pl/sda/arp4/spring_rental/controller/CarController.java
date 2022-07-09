@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.arp4.spring_rental.model.Car;
+import pl.sda.arp4.spring_rental.model.dto.CarDTO;
 import pl.sda.arp4.spring_rental.service.CarService;
 
 import java.util.List;
@@ -21,35 +22,25 @@ public class CarController {
 
     // READ
     @GetMapping("/list")
-    public List<Car> getAllCars() {
-        log.info("Wywołano listę samochodów.");
-
-        List<Car> list = carService.getAllCars();
-        return list;
+    public List<CarDTO> list() {
+        log.info("Received request: list");
+        return carService.findAll();
     }
-
-    // CREATE
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addCar(@RequestBody Car car) {
-        log.info("Wywołano dodanie samochodu: " + car);
-
+    public void create(@RequestBody Car car) {
+        log.info("Received request: create -> " + car);
         carService.addCar(car);
     }
-
-    // DELETE
-    @DeleteMapping("/delete/{identifier}")
-    public void deleteCar(@PathVariable(name = "identifier") Long identyfikator) {
-        log.info("Wywołano usunięcie samochodu: " + identyfikator);
-
-        carService.deleteById(identyfikator);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable(name = "id") Long carId) {
+        log.info("Received request: delete -> " + carId);
+        carService.deleteCar(carId);
     }
-
-    // UPDATE
-    @PatchMapping("/update")
-    public void updateCar(@RequestBody Car car) {
-        log.info("Wywiołano aktualizację samochodu: " + car);
-
-        carService.updateCar(car);
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void update(@PathVariable(name = "id") Long carId, @RequestBody Car car) {
+        log.info("Received request: update -> " + car);
+        carService.update(carId, car);
     }
 }
